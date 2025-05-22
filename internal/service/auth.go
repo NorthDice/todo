@@ -48,6 +48,25 @@ func (s *AuthService) GenerateToken(username, password string) (string, error) {
 
 	return token.SignedString([]byte(signingKey))
 }
+func (s *AuthService) ParseToken(tokenString string) (int, error) {
+	parsedToken, err := jwt.ParseWithClaims(tokenString, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, jwt.NewValidationError("unexpected signing method", jwt.ValidationErrorSignatureInvalid)
+		}
+		return []byte(signingKey), nil
+	})
+
+	if err != nil {
+		return 0, err
+	}
+
+	claims, ok := parsedToken.Claims.(*tokenClaims)
+	if !ok || !parsedToken.Valid {
+		return 0, jwt.NewValidationError("invalid token", jwt.ValidationErrorClaimsInvalid)
+	}
+	
+	return claims.UserId, nil
+}
 
 func generatePasswordHash(password string) string {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
