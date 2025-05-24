@@ -33,11 +33,11 @@ func (s *AuthService) CreateUser(user models.User) (int, error) {
 }
 
 func (s *AuthService) GenerateToken(username, password string) (string, error) {
-	user, err := s.repo.GetUser(username, generatePasswordHash(password))
+	user, err := s.repo.GetUser(username, password)
+
 	if err != nil {
 		return "", err
 	}
-
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(tokenTTL)),
@@ -64,7 +64,7 @@ func (s *AuthService) ParseToken(tokenString string) (int, error) {
 	if !ok || !parsedToken.Valid {
 		return 0, jwt.NewValidationError("invalid token", jwt.ValidationErrorClaimsInvalid)
 	}
-	
+
 	return claims.UserId, nil
 }
 
