@@ -20,6 +20,9 @@ type TodoList interface {
 type TodoItem interface {
 	Create(userId, listId int, item models.TodoItem) (int, error)
 	GetAll(userId, listId int) ([]models.TodoItem, error)
+	GetById(userId, itemId int) (models.TodoItem, error)
+	Delete(userId, itemId int) error
+	Update(userId, listId int, input models.UpdateItemInput) error
 }
 
 type Service struct {
