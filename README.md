@@ -4,7 +4,7 @@ A clean architecture REST API for managing TODO lists, built with Go and Postgre
 
 ## Features
 
-- **RESTful API Design** - Follows REST conventions with proper HTTP methods and status codes
+- **RESTful API Design** - Follows REST conventions with proper HTTP methods and status codes.
 - **Clean Architecture** - Separation of concerns with clear layers (delivery, service, repository)
 - **JWT Authentication** - Secure user registration/login with JWT tokens
 - **PostgreSQL Database** - Relational data storage with proper schema migrations
